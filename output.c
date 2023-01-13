@@ -405,9 +405,9 @@ void output_init_common(log_level level, const char *device, unsigned output_buf
 			if (!opened_successfully && !retry_on_open_error) {
 				exit(0);
 			} else {
-				unsigned retry_open_delay = 100000;
+				unsigned retry_open_delay = 5;
 				LOG_DEBUG("Retrying open in: %u", retry_open_delay);
-				usleep(retry_open_delay);				
+				sleep(retry_open_delay);				
 			}	
 		}
 	}
