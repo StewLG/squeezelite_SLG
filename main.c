@@ -362,7 +362,7 @@ int main(int argc, char **argv) {
 
 	while (optind < argc && strlen(argv[optind]) >= 2 && argv[optind][0] == '-') {
 		char *opt = argv[optind] + 1;
-		if (strstr("oabcCdefmMnNpPrsZ"
+		if (strstr("oabcCdefmMnNpPrsQZ"
 #if ALSA
 				   "UVO"
 #endif
