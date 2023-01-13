@@ -356,6 +356,8 @@ void output_init_common(log_level level, const char *device, unsigned output_buf
 
 	loglevel = level;
 
+	LOG_DEBUG("retry_on_open_error: %b", retry_on_open_error);
+
 	output_buf_size = output_buf_size - (output_buf_size % BYTES_PER_FRAME);
 	LOG_DEBUG("outputbuf size: %u", output_buf_size);
 
