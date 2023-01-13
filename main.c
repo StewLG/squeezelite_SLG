@@ -145,7 +145,7 @@ static void usage(const char *argv0) {
 #if LINUX || FREEBSD || SUN
 		   "  -z \t\t\tDaemonize\n"
 #endif
-	   	   "  -Q \t\tForce restart when stream fails to open or has errors\n"		   
+	   	   "  -Q \t\t\tForce restart when stream fails to open or has errors\n"		   
 		   "  -Z <rate>\t\tReport rate to server in helo as the maximum sample rate we can support\n"
 		   "  -t \t\t\tLicense terms\n"
 		   "  -? \t\t\tDisplay this help text\n"
