@@ -406,7 +406,7 @@ void output_init_common(log_level level, const char *device, unsigned output_buf
 				exit(0);
 			} else {
 				unsigned retry_open_delay = 5;
-				LOG_DEBUG("Retrying open in: %u", retry_open_delay);
+				LOG_DEBUG("Retrying open in: %u seconds", retry_open_delay);
 				sleep(retry_open_delay);				
 			}	
 		}
