@@ -404,7 +404,11 @@ void output_init_common(log_level level, const char *device, unsigned output_buf
 			opened_successfully = test_open(output.device, output.supported_rates, user_rates);
 			if (!opened_successfully && !retry_on_open_error) {
 				exit(0);
-			}
+			} else {
+				unsigned retry_open_delay = 10000;
+				LOG_DEBUG("Retrying open in: %u", retry_open_delay);
+				usleep(retry_open_delay);				
+			}	
 		}
 	}
 
