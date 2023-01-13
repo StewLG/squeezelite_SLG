@@ -490,7 +490,7 @@ static void * output_thread(void *arg) {
 
 static pthread_t thread;
 
-void output_init_pulse(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned idle) {
+void output_init_pulse(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned idle, bool retry_on_open_error) {
 	loglevel = level;
 
 	LOG_INFO("init output");
@@ -505,7 +505,7 @@ void output_init_pulse(log_level level, const char *device, unsigned output_buf_
 		exit(1);
 	}
 
-	output_init_common(level, device, output_buf_size, rates, idle);
+	output_init_common(level, device, output_buf_size, rates, idle, retry_on_open_error);
 
 	// start output thread
 	pulse.running = true;

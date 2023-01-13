@@ -916,7 +916,7 @@ int mixer_init_alsa(const char *device, const char *mixer, int mixer_index) {
 
 static pthread_t thread;
 
-void output_init_alsa(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned rt_priority, unsigned idle, char *mixer_device, char *volume_mixer, bool mixer_unmute, bool mixer_linear) {
+void output_init_alsa(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned rt_priority, unsigned idle, char *mixer_device, char *volume_mixer, bool mixer_unmute, bool mixer_linear, bool retry_on_open_error) {
 
 	unsigned alsa_buffer = ALSA_BUFFER_TIME;
 	unsigned alsa_period = ALSA_PERIOD_COUNT;
@@ -985,7 +985,7 @@ void output_init_alsa(log_level level, const char *device, unsigned output_buf_s
 
 	snd_lib_error_set_handler((snd_lib_error_handler_t)alsa_error_handler);
 
-	output_init_common(level, device, output_buf_size, rates, idle);
+	output_init_common(level, device, output_buf_size, rates, idle, retry_on_open_error);
 	
 	if (volume_mixer_name) {
 	        if (mixer_init_alsa(alsa.mixer_ctl, alsa.volume_mixer_name, volume_mixer_index ?

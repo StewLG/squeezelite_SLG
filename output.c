@@ -351,7 +351,7 @@ void _checkfade(bool start) {
 	}
 }
 
-void output_init_common(log_level level, const char *device, unsigned output_buf_size, unsigned rates[], unsigned idle) {
+void output_init_common(log_level level, const char *device, unsigned output_buf_size, unsigned rates[], unsigned idle, bool retry_on_open_error) {
 	unsigned i;
 
 	loglevel = level;

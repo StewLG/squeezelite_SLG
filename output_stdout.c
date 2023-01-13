@@ -124,7 +124,7 @@ static void *output_thread() {
 
 static thread_type thread;
 
-void output_init_stdout(log_level level, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay) {
+void output_init_stdout(log_level level, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, bool retry_on_open_error) {
 	loglevel = level;
 
 	LOG_INFO("init output stdout");
@@ -154,7 +154,7 @@ void output_init_stdout(log_level level, unsigned output_buf_size, char *params,
 		rates[0] = 44100;
 	}
 
-	output_init_common(level, "-", output_buf_size, rates, 0);
+	output_init_common(level, "-", output_buf_size, rates, 0, retry_on_open_error);
 
 #if LINUX || OSX || FREEBSD
 	pthread_attr_t attr;

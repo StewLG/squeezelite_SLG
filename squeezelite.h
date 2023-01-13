@@ -685,7 +685,7 @@ struct outputstate {
 #endif
 };
 
-void output_init_common(log_level level, const char *device, unsigned output_buf_size, unsigned rates[], unsigned idle);
+void output_init_common(log_level level, const char *device, unsigned output_buf_size, unsigned rates[], unsigned idle, bool retry_on_open_error);
 void output_close_common(void);
 void output_flush(void);
 // _* called with mutex locked
@@ -698,7 +698,7 @@ void list_devices(void);
 void list_mixers(const char *output_device);
 void set_volume(unsigned left, unsigned right);
 bool test_open(const char *device, unsigned rates[], bool userdef_rates);
-void output_init_alsa(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned rt_priority, unsigned idle, char *mixer_device, char *volume_mixer, bool mixer_unmute, bool mixer_linear);
+void output_init_alsa(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned rt_priority, unsigned idle, char *mixer_device, char *volume_mixer, bool mixer_unmute, bool mixer_linear, bool retry_on_open_error);
 void output_close_alsa(void);
 #endif
 
@@ -707,7 +707,7 @@ void output_close_alsa(void);
 void list_devices(void);
 void set_volume(unsigned left, unsigned right);
 bool test_open(const char *device, unsigned rates[], bool userdef_rates);
-void output_init_pa(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned idle);
+void output_init_pa(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned idle, bool retry_on_open_error);
 void output_close_pa(void);
 void _pa_open(void);
 #endif
@@ -718,12 +718,12 @@ void list_devices(void);
 void set_volume(unsigned left, unsigned right);
 void set_sample_rate(uint32_t sample_rate);
 bool test_open(const char *device, unsigned rates[], bool userdef_rates);
-void output_init_pulse(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned idle);
+void output_init_pulse(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned idle, bool retry_on_open_error);
 void output_close_pulse(void);
 #endif
 
 // output_stdout.c
-void output_init_stdout(log_level level, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay);
+void output_init_stdout(log_level level, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, bool retry_on_open_error);
 void output_close_stdout(void);
 
 // output_pack.c

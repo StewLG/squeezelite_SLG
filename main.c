@@ -322,6 +322,7 @@ int main(int argc, char **argv) {
 	char *output_mixer = NULL;
 	bool output_mixer_unmute = false;
 	bool linear_volume = false;
+	bool retry_on_open_error = false;
 #endif
 #if DSD
 	unsigned dsd_delay = 0;
@@ -600,6 +601,8 @@ int main(int argc, char **argv) {
 		case 'X':
 			linear_volume = true;
 			break;
+		case 'Q':
+			retry_on_open_error = true;
 		case 'U':
 			output_mixer_unmute = true;
 		case 'V':
@@ -770,17 +773,17 @@ int main(int argc, char **argv) {
 	stream_init(log_stream, stream_buf_size);
 
 	if (!strcmp(output_device, "-")) {
-		output_init_stdout(log_output, output_buf_size, output_params, rates, rate_delay);
+		output_init_stdout(log_output, output_buf_size, output_params, rates, rate_delay, retry_on_open_error);
 	} else {
 #if ALSA
 		output_init_alsa(log_output, output_device, output_buf_size, output_params, rates, rate_delay, rt_priority, idle, mixer_device, output_mixer,
-						 output_mixer_unmute, linear_volume);
+						 output_mixer_unmute, linear_volume, retry_on_open_error);
 #endif
 #if PORTAUDIO
-		output_init_pa(log_output, output_device, output_buf_size, output_params, rates, rate_delay, idle);
+		output_init_pa(log_output, output_device, output_buf_size, output_params, rates, rate_delay, idle, retry_on_open_error);
 #endif
 #if PULSEAUDIO
-		output_init_pulse(log_output, output_device, output_buf_size, output_params, rates, rate_delay, idle);
+		output_init_pulse(log_output, output_device, output_buf_size, output_params, rates, rate_delay, idle, retry_on_open_error);
 #endif
 	}
 
