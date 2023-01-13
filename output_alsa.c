@@ -778,6 +778,7 @@ static void *output_thread(void *arg) {
 				}
 			}
 			continue;
+			LOG_INFO("output_thread - point 0");
 		}
 
 		// restrict avail to within sensible limits as alsa drivers can return erroneous large values
@@ -793,6 +794,7 @@ static void *output_thread(void *arg) {
 			LOG_SDEBUG("avail 0 - sleeping");
 			usleep(10000);
 			continue;
+			LOG_INFO("output_thread - point 1");			
 		}
 
 		LOCK;
@@ -817,6 +819,8 @@ static void *output_thread(void *arg) {
 			continue;
 		}
 
+		LOG_INFO("output_thread - point 2");
+
 		// measure output delay
 		snd_pcm_sframes_t delay;
 		if ((err = snd_pcm_delay(pcmp, &delay)) < 0) {
@@ -839,6 +843,8 @@ static void *output_thread(void *arg) {
 			output.frames_played_dmp = output.frames_played;
 		}
 
+		LOG_INFO("output_thread - point 3");
+
 		// process frames
 		frames_t wrote = _output_frames(avail);
 
@@ -850,6 +856,8 @@ static void *output_thread(void *arg) {
 			usleep(10000);
 		}
 	}
+
+	LOG_INFO("output_thread - point 4");
 
 	return 0;
 }
