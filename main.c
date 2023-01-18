@@ -807,6 +807,13 @@ int main(int argc, char **argv) {
 
 		// Only repeat if we requested retry
 		do_init = (retry_on_open_error && !init_ok);
+
+		// HACK!!!!!! Might be needed but not sure!!! -- SLG
+		if (do_init) {
+			LOG_DEBUG("HACK -- Closing stream outputs before retry")
+			stream_close();
+			output_close_alsa();
+		}
 		LOG_DEBUG("Bottom of do_init while loop");				
 	}
 
@@ -829,10 +836,16 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
+	LOG_DEBUG("slimproto start");
 	slimproto(log_slimproto, server, mac, name, namefile, modelname, maxSampleRate);
+	LOG_DEBUG("slimproto end");
 
+	LOG_DEBUG("decode_close()");
 	decode_close();
+	LOG_DEBUG("stream_close()");	
 	stream_close();
+
+	LOG_DEBUG("output_close_XXXXX()");
 
 	if (!strcmp(output_device, "-")) {
 		output_close_stdout();
