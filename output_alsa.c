@@ -665,6 +665,8 @@ static void *output_thread(void *arg) {
 
 	while (running) {
 
+		LOG_INFO("Top of while (running)");
+
 		// disabled output - player is off
 		while (output_off) {
 			usleep(100000);
@@ -673,6 +675,8 @@ static void *output_thread(void *arg) {
 			UNLOCK;
 			if (!running) return 0;
 		}
+
+		LOG_INFO("before if (probe_device)");
 
 		// wait until device returns - to allow usb audio devices to be turned off
 		if (probe_device) {
@@ -709,6 +713,9 @@ static void *output_thread(void *arg) {
 				alsa_open(output.device, output.current_sample_rate, output.buffer, output.period);
 #endif
 			}
+
+			LOG_INFO("Before alsa_open");
+
 #if DSD
 			if (!!alsa_open(output.device, output.current_sample_rate, output.buffer, output.period, output.outfmt)) {
 #else
