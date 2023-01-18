@@ -773,7 +773,7 @@ int main(int argc, char **argv) {
 	bool do_init = true;
 	bool init_ok = false;
 
-	while (!do_init) {
+	while (do_init) {
 		LOG_DEBUG("Top of do_init while loop");		
 #if WIN
 		winsock_init();
