@@ -812,7 +812,7 @@ int main(int argc, char **argv) {
 		if (do_init) {
 			LOG_DEBUG("HACK -- Closing stream outputs before retry");
 			stream_close();
-			output_close_alsa();
+			//output_close_alsa();
 		}
 		LOG_DEBUG("Bottom of do_init while loop");				
 	}
