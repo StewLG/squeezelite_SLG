@@ -661,6 +661,8 @@ static void *output_thread(void *arg) {
 	bool probe_device = (arg != NULL);
 	int err;
 
+	LOG_INFO("Starting output_thread");
+
 	while (running) {
 
 		// disabled output - player is off
@@ -722,6 +724,8 @@ static void *output_thread(void *arg) {
 			UNLOCK;
 		}
 
+		LOG_INFO("output_thread - point 0.1");
+
 		snd_pcm_state_t state = snd_pcm_state(pcmp);
 
 		if (state == SND_PCM_STATE_XRUN) {
@@ -744,6 +748,8 @@ static void *output_thread(void *arg) {
 			continue;
 		}
 
+		LOG_INFO("output_thread - point 0.2");		
+
 		snd_pcm_sframes_t avail = snd_pcm_avail_update(pcmp);
 
 		if (avail < 0) {
@@ -761,10 +767,15 @@ static void *output_thread(void *arg) {
 			continue;
 		}
 
+		LOG_INFO("output_thread - point 0.3");	
+
 		if (avail < alsa.period_size) {
+			LOG_INFO("output_thread - point 0.4");				
 			if (start) {
+				LOG_INFO("output_thread - point 0.5");					
 				if (alsa.mmap && ((err = snd_pcm_start(pcmp)) < 0)) {
 					if ((err = snd_pcm_recover(pcmp, err, 1)) < 0) {
+						LOG_INFO("output_thread - point 0.6");						
 						if (err == -ENODEV) {
 							LOG_INFO("Device %s no longer available", output.device);
 							alsa_close();
@@ -790,9 +801,12 @@ static void *output_thread(void *arg) {
 					start = true;
 				}
 			}
+			LOG_INFO("output_thread - point 0.7");			
 			continue;
-			LOG_INFO("output_thread - point 0");
+			LOG_INFO("output_thread - point 0.8");			
 		}
+
+		LOG_INFO("output_thread - point 0.9");	
 
 		// restrict avail to within sensible limits as alsa drivers can return erroneous large values
 		// in writei mode restrict to period_size due to size of write_buf
@@ -802,13 +816,17 @@ static void *output_thread(void *arg) {
 			avail = min(avail, alsa.period_size);
 		}
 
+		LOG_INFO("output_thread - point 0.10");	
+
 		// avoid spinning in cases where wait returns but no bytes available (seen with pulse audio)
 		if (avail == 0) {
 			LOG_SDEBUG("avail 0 - sleeping");
 			usleep(10000);
 			continue;
-			LOG_INFO("output_thread - point 1");			
+			LOG_INFO("output_thread - point 0.11");			
 		}
+
+		LOG_INFO("output_thread - point 0.12");	
 
 		LOCK;
 
@@ -832,7 +850,7 @@ static void *output_thread(void *arg) {
 			continue;
 		}
 
-		LOG_INFO("output_thread - point 2");
+		LOG_INFO("output_thread - point .13");
 
 		// measure output delay
 		snd_pcm_sframes_t delay;
@@ -856,7 +874,7 @@ static void *output_thread(void *arg) {
 			output.frames_played_dmp = output.frames_played;
 		}
 
-		LOG_INFO("output_thread - point 3");
+		LOG_INFO("output_thread - point .14");
 
 		// process frames
 		frames_t wrote = _output_frames(avail);
@@ -870,7 +888,7 @@ static void *output_thread(void *arg) {
 		}
 	}
 
-	LOG_INFO("output_thread - point 4");
+	LOG_INFO("Exiting output_thread");
 
 	return 0;
 }
