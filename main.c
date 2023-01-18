@@ -810,7 +810,7 @@ int main(int argc, char **argv) {
 
 		// HACK!!!!!! Might be needed but not sure!!! -- SLG
 		if (do_init) {
-			LOG_DEBUG("HACK -- Closing stream outputs before retry")
+			LOG_DEBUG("HACK -- Closing stream outputs before retry");
 			stream_close();
 			output_close_alsa();
 		}
