@@ -1000,6 +1000,9 @@ bool output_init_alsa(log_level level, const char *device, unsigned output_buf_s
 	snd_lib_error_set_handler((snd_lib_error_handler_t)alsa_error_handler);
 
 	bool output_init_ok = output_init_common(level, device, output_buf_size, rates, idle, retry_on_open_error);
+	if (!output_init_ok) {
+		return false;
+	}
 
 	LOG_DEBUG("Finished output_init_common() in output_alsa");	
 	
@@ -1053,6 +1056,8 @@ bool output_init_alsa(log_level level, const char *device, unsigned output_buf_s
 	} else {
 		LOG_DEBUG("set output sched fifo rt: %u", param.sched_priority);
 	}
+
+	return true;
 }
 
 void output_close_alsa(void) {
