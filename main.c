@@ -61,6 +61,8 @@
 
 #define CODECS CODECS_BASE CODECS_AAC CODECS_FF CODECS_OPUS CODECS_DSD CODECS_MP3
 
+extern log_level loglevel;
+
 static void usage(const char *argv0) {
 	printf(TITLE " See -t for license terms\n"
 		   "Usage: %s [options]\n"
