@@ -399,15 +399,17 @@ bool output_init_common(log_level level, const char *device, unsigned output_buf
 		}
 	}
 	else {
-		bool opened_successfully = false;
-		while (!opened_successfully) {
-			opened_successfully = test_open(output.device, output.supported_rates, user_rates);
-			if (!opened_successfully && !retry_on_open_error) {
+		bool opened_successfully = test_open(output.device, output.supported_rates, user_rates);
+		if (!opened_successfully) {
+			LOG_DEBUG("Open failed");
+			if (!retry_on_open_error) {
+				LOG_DEBUG("No retries requested, exiting because can't open");
 				exit(0);
 			} else {
+				// TODO: Move this retry delay higher!
 				unsigned retry_open_delay = 5;
 				LOG_DEBUG("Retrying open in: %u seconds", retry_open_delay);
-				sleep(retry_open_delay);
+				sleep(retry_open_delay);				
 				return false;				
 			}	
 		}
