@@ -767,36 +767,46 @@ int main(int argc, char **argv) {
 	}
 #endif
 
+	// Repeat until we succeed
+	bool do_init = true;
+	bool init_ok = false;
+
+	while (!do_init) {
+		LOG_DEBUG("Top of do_init while loop");		
 #if WIN
-	winsock_init();
+		winsock_init();
 #endif
+		stream_init(log_stream, stream_buf_size);
 
-	stream_init(log_stream, stream_buf_size);
-
-	if (!strcmp(output_device, "-")) {
-		output_init_stdout(log_output, output_buf_size, output_params, rates, rate_delay, retry_on_open_error);
-	} else {
+		if (!strcmp(output_device, "-")) {
+			output_init_stdout(log_output, output_buf_size, output_params, rates, rate_delay, retry_on_open_error);
+		} else {
 #if ALSA
-		output_init_alsa(log_output, output_device, output_buf_size, output_params, rates, rate_delay, rt_priority, idle, mixer_device, output_mixer,
-						 output_mixer_unmute, linear_volume, retry_on_open_error);
+			init_ok = output_init_alsa(log_output, output_device, output_buf_size, output_params, rates, rate_delay, rt_priority, idle, mixer_device, output_mixer,
+						 				output_mixer_unmute, linear_volume, retry_on_open_error);
 #endif
 #if PORTAUDIO
-		output_init_pa(log_output, output_device, output_buf_size, output_params, rates, rate_delay, idle, retry_on_open_error);
+			output_init_pa(log_output, output_device, output_buf_size, output_params, rates, rate_delay, idle, retry_on_open_error);
 #endif
 #if PULSEAUDIO
-		output_init_pulse(log_output, output_device, output_buf_size, output_params, rates, rate_delay, idle, retry_on_open_error);
+			output_init_pulse(log_output, output_device, output_buf_size, output_params, rates, rate_delay, idle, retry_on_open_error);
 #endif
-	}
+		}
 
 #if DSD
-	dsd_init(dsd_outfmt, dsd_delay);
+		dsd_init(dsd_outfmt, dsd_delay);
 #endif
 
 #if VISEXPORT
-	if (visexport) {
-		output_vis_init(log_output, mac);
-	}
+		if (visexport) {
+			output_vis_init(log_output, mac);
+		}
 #endif
+
+		// Only repeat if we requested retry
+		do_init = (retry_on_open_error && !init_ok);
+		LOG_DEBUG("Bottom of do_init while loop");				
+	}
 
 	decode_init(log_decode, include_codecs, exclude_codecs);
 

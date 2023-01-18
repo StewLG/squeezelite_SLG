@@ -271,7 +271,7 @@ static void alsa_close(void) {
 
 bool test_open(const char *device, unsigned rates[], bool userdef_rates) {
 
-	LOG_DEBUG("Starting test_open in output_alsa.c");
+	LOG_DEBUG("Starting test_open in output_alsa.c. Device: %s", device);
 
 	int err;
 	snd_pcm_t *pcm;
@@ -284,6 +284,7 @@ bool test_open(const char *device, unsigned rates[], bool userdef_rates) {
 	// open device
 	if ((err = snd_pcm_open(&pcm, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
 		LOG_ERROR("playback open error: %s", snd_strerror(err));
+		LOG_DEBUG("Returning early from test_open in output_alsa.c");		
 		return false;
 	}
 
@@ -928,7 +929,8 @@ int mixer_init_alsa(const char *device, const char *mixer, int mixer_index) {
 
 static pthread_t thread;
 
-void output_init_alsa(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned rt_priority, unsigned idle, char *mixer_device, char *volume_mixer, bool mixer_unmute, bool mixer_linear, bool retry_on_open_error) {
+// HEY! Make the other init_XXXX functions support the bool -- SLG
+bool output_init_alsa(log_level level, const char *device, unsigned output_buf_size, char *params, unsigned rates[], unsigned rate_delay, unsigned rt_priority, unsigned idle, char *mixer_device, char *volume_mixer, bool mixer_unmute, bool mixer_linear, bool retry_on_open_error) {
 
 	unsigned alsa_buffer = ALSA_BUFFER_TIME;
 	unsigned alsa_period = ALSA_PERIOD_COUNT;
@@ -997,7 +999,7 @@ void output_init_alsa(log_level level, const char *device, unsigned output_buf_s
 
 	snd_lib_error_set_handler((snd_lib_error_handler_t)alsa_error_handler);
 
-	output_init_common(level, device, output_buf_size, rates, idle, retry_on_open_error);
+	bool output_init_ok = output_init_common(level, device, output_buf_size, rates, idle, retry_on_open_error);
 
 	LOG_DEBUG("Finished output_init_common() in output_alsa");	
 	

@@ -685,7 +685,7 @@ struct outputstate {
 #endif
 };
 
-void output_init_common(log_level level, const char *device, unsigned output_buf_size, unsigned rates[], unsigned idle, bool retry_on_open_error);
+bool output_init_common(log_level level, const char *device, unsigned output_buf_size, unsigned rates[], unsigned idle, bool retry_on_open_error);
 void output_close_common(void);
 void output_flush(void);
 // _* called with mutex locked

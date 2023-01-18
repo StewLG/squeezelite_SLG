@@ -351,7 +351,7 @@ void _checkfade(bool start) {
 	}
 }
 
-void output_init_common(log_level level, const char *device, unsigned output_buf_size, unsigned rates[], unsigned idle, bool retry_on_open_error) {
+bool output_init_common(log_level level, const char *device, unsigned output_buf_size, unsigned rates[], unsigned idle, bool retry_on_open_error) {
 	unsigned i;
 
 	loglevel = level;
@@ -407,7 +407,8 @@ void output_init_common(log_level level, const char *device, unsigned output_buf
 			} else {
 				unsigned retry_open_delay = 5;
 				LOG_DEBUG("Retrying open in: %u seconds", retry_open_delay);
-				sleep(retry_open_delay);				
+				sleep(retry_open_delay);
+				return false;				
 			}	
 		}
 	}
@@ -434,6 +435,8 @@ void output_init_common(log_level level, const char *device, unsigned output_buf
 		}
 		LOG_INFO("supported rates: %s", rates_buf);
 	}
+
+	return true;
 }
 
 void output_close_common(void) {
