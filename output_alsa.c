@@ -270,11 +270,16 @@ static void alsa_close(void) {
 }
 
 bool test_open(const char *device, unsigned rates[], bool userdef_rates) {
+
+	LOG_DEBUG("Starting test_open in output_alsa.c");
+
 	int err;
 	snd_pcm_t *pcm;
 	snd_pcm_hw_params_t *hw_params;
 	hw_params = (snd_pcm_hw_params_t *) alloca(snd_pcm_hw_params_sizeof());
 	memset(hw_params, 0, snd_pcm_hw_params_sizeof());
+
+	LOG_DEBUG("About to attempt snd_pcm_open sequence..");
 
 	// open device
 	if ((err = snd_pcm_open(&pcm, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
@@ -282,11 +287,15 @@ bool test_open(const char *device, unsigned rates[], bool userdef_rates) {
 		return false;
 	}
 
+	LOG_DEBUG("About to get max params..");
+
 	// get max params
 	if ((err = snd_pcm_hw_params_any(pcm, hw_params)) < 0) {
 		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
 		return false;
 	}
+
+	LOG_DEBUG("Sample rate checks starting...");
 
 	// find supported sample rates to enable client side resampling of non supported rates
 	if (!userdef_rates) {
@@ -296,12 +305,15 @@ bool test_open(const char *device, unsigned rates[], bool userdef_rates) {
 		for (i = 0, ind = 0; ref[i]; ++i) {
 			if (snd_pcm_hw_params_test_rate(pcm, hw_params, ref[i], 0) == 0) {
 				rates[ind++] = ref[i];
+				LOG_DEBUG("Adding sample rate %u", ref[i]);
 			}
 			else {
 				LOG_DEBUG("sample rate %u not supported", ref[i]);
 			}
 		}
 	}
+
+	LOG_DEBUG("About to exit test_open");	
 
 	if ((err = snd_pcm_close(pcm)) < 0) {
 		LOG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
@@ -986,9 +998,11 @@ void output_init_alsa(log_level level, const char *device, unsigned output_buf_s
 	snd_lib_error_set_handler((snd_lib_error_handler_t)alsa_error_handler);
 
 	output_init_common(level, device, output_buf_size, rates, idle, retry_on_open_error);
+
+	LOG_DEBUG("Finished output_init_common() in output_alsa");	
 	
 	if (volume_mixer_name) {
-	        if (mixer_init_alsa(alsa.mixer_ctl, alsa.volume_mixer_name, volume_mixer_index ?
+	    if (mixer_init_alsa(alsa.mixer_ctl, alsa.volume_mixer_name, volume_mixer_index ?
 			atoi(volume_mixer_index) : 0) < 0)
 		{
 			LOG_ERROR("Initialization of mixer failed, reverting to software volume");
@@ -1019,6 +1033,8 @@ void output_init_alsa(log_level level, const char *device, unsigned output_buf_s
 	touch_memory(silencebuf, MAX_SILENCE_FRAMES * BYTES_PER_FRAME);
 	touch_memory(outputbuf->buf, outputbuf->size);
 #endif
+
+	LOG_DEBUG("Starting output thread in output_alsa");
 
 	// start output thread
 	pthread_attr_t attr;
