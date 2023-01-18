@@ -359,6 +359,7 @@ int main(int argc, char **argv) {
 	// HACK - is the problem some static initialization in ALSA?
 	unsigned startup_delay_in_seconds = 30;
 	LOG_DEBUG("Delaying start for %u seconds", startup_delay_in_seconds);
+	fprintf(stderr, "Delaying start for %u seconds\n\n", startup_delay_in_seconds);	
 	sleep(startup_delay_in_seconds);	
 
 	get_mac(mac);
@@ -778,6 +779,7 @@ int main(int argc, char **argv) {
 
 	unsigned pre_init_delay = 60;
 	LOG_DEBUG("Pausing before init for %u seconds", pre_init_delay);
+	fprintf(stderr, "Pausing before init for %u seconds\n\n", pre_init_delay);
 	sleep(pre_init_delay);	
 
 	// Repeat until we succeed
