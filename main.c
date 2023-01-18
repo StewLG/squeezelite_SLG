@@ -298,7 +298,7 @@ static void sighandler(int signum) {
 int main(int argc, char **argv) {
 
 	// HACK - is the problem some static initialization in ALSA?
-	unsigned startup_delay_in_seconds = 120
+	unsigned startup_delay_in_seconds = 120;
 	LOG_DEBUG("Delaying start for %u seconds", startup_delay_in_seconds);
 	sleep(startup_delay_in_seconds);	
 
