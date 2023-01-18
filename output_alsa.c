@@ -78,6 +78,7 @@ extern u8_t *silencebuf_dsd;
 static log_level loglevel;
 
 static bool running = true;
+static bool had_error_in_output_thread = false;
 
 extern struct outputstate output;
 extern struct buffer *outputbuf;
@@ -804,7 +805,8 @@ static void *output_thread(void *arg) {
 					}
 					if ((err = snd_pcm_recover(pcmp, err, 1)) < 0) {
 						LOG_INFO("pcm wait error: %s", snd_strerror(err));
-						return -1;
+						had_error_in_output_thread = true;
+						return 0;
 					}
 					start = true;
 				}

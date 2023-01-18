@@ -63,6 +63,8 @@
 
 extern log_level loglevel;
 
+extern bool had_error_in_output_thread;
+
 static void usage(const char *argv0) {
 	printf(TITLE " See -t for license terms\n"
 		   "Usage: %s [options]\n"
@@ -818,8 +820,10 @@ int main(int argc, char **argv) {
 		}
 #endif
 
-		// Only repeat if we requested retry
-		do_init = (retry_on_open_error && !init_ok);
+		// TODO: add new parm for retry_on_open_error --- SLG
+		// Only repeat if we requested retry, OR there was an error
+		do_init = ( (retry_on_open_error && !init_ok) || 
+			        (retry_on_open_error && had_error_in_output_thread) );
 
 		LOG_DEBUG("Listing devices:");
 		list_devices();
@@ -832,6 +836,8 @@ int main(int argc, char **argv) {
 		}
 		LOG_DEBUG("Bottom of do_init while loop");				
 	}
+
+	LOG_DEBUG("Exited do_init while loop");	
 
 	decode_init(log_decode, include_codecs, exclude_codecs);
 
