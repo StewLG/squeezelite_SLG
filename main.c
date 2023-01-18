@@ -808,6 +808,9 @@ int main(int argc, char **argv) {
 		// Only repeat if we requested retry
 		do_init = (retry_on_open_error && !init_ok);
 
+		LOG_DEBUG("Listing devices:");
+		list_devices();
+
 		// HACK!!!!!! Might be needed but not sure!!! -- SLG
 		if (do_init) {
 			LOG_DEBUG("HACK -- Closing stream outputs before retry");
