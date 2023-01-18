@@ -63,7 +63,7 @@
 
 extern log_level loglevel;
 
-extern bool had_error_in_output_thread;
+//extern bool had_error_in_output_thread;
 
 static void usage(const char *argv0) {
 	printf(TITLE " See -t for license terms\n"
@@ -308,6 +308,8 @@ int main(int argc, char **argv) {
 	char *modelname = NULL;
 	extern bool pcm_check_header;
 	extern bool user_rates;
+	extern bool had_error_in_output_thread;
+
 	char *logfile = NULL;
 	u8_t mac[6];
 	unsigned stream_buf_size = STREAMBUF_SIZE;
