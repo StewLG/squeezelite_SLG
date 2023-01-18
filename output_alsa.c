@@ -804,6 +804,7 @@ static void *output_thread(void *arg) {
 					}
 					if ((err = snd_pcm_recover(pcmp, err, 1)) < 0) {
 						LOG_INFO("pcm wait error: %s", snd_strerror(err));
+						return -1;
 					}
 					start = true;
 				}
