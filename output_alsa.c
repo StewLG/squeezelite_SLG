@@ -661,7 +661,7 @@ static void *output_thread(void *arg) {
 	bool probe_device = (arg != NULL);
 	int err;
 
-	extern bool had_error_in_output_thread = false;	
+	extern bool had_error_in_output_thread;	
 
 	LOG_INFO("Starting output_thread");
 
