@@ -78,7 +78,6 @@ extern u8_t *silencebuf_dsd;
 static log_level loglevel;
 
 static bool running = true;
-static bool had_error_in_output_thread = false;
 
 extern struct outputstate output;
 extern struct buffer *outputbuf;
@@ -661,6 +660,8 @@ static void *output_thread(void *arg) {
 	bool output_off = (output.state == OUTPUT_OFF);
 	bool probe_device = (arg != NULL);
 	int err;
+
+	extern bool had_error_in_output_thread = false;	
 
 	LOG_INFO("Starting output_thread");
 

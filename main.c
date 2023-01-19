@@ -63,7 +63,7 @@
 
 extern log_level loglevel;
 
-//extern bool had_error_in_output_thread;
+bool had_error_in_output_thread;
 
 static void usage(const char *argv0) {
 	printf(TITLE " See -t for license terms\n"
